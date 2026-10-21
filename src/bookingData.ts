@@ -6,4 +6,4 @@ export function validateDropoff(booking:Booking,dropoffAt:string,now:string){
  if(dropoffAt>now)return 'Actual drop-off time cannot be in the future.';
  return '';
 }
-export function displayBookingTime(at?:string){return at?new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dubai',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(at+'+04:00'))+' GST':'Not recorded';}
+export function displayBookingTime(at?:string){return at?new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dubai',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(at+'+04:00')):'Not recorded';}

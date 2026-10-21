@@ -9,7 +9,7 @@ test('drop-off must be recorded and fall between pickup and the current GST time
  assert.equal(validateDropoff(booking,'2026-10-21T10:30','2026-10-21T12:00'),'');
  assert.equal(validateDropoff(booking,'2026-10-22T00:30','2026-10-22T01:00'),'');
 });
-test('missing legacy drop-off times stay unknown and display uses GST',()=>{
+test('missing legacy drop-off times stay unknown and display uses Dubai time without a timezone suffix',()=>{
  assert.equal(displayBookingTime(), 'Not recorded');
- assert.match(displayBookingTime('2026-10-21T10:30'),/10:30 GST/);
+ assert.match(displayBookingTime('2026-10-21T10:30'),/10:30$/);
 });
