@@ -27,11 +27,10 @@ npm run preview -- --port 4173
 - Driver profiles with contacts, licences, permits, emergency details, and editable information
 - Customer tables with per-company creation, editable profiles, search, filters, pagination, and scoped CSV export
 - Invoices and booking reports
-- Companies tab with onboarding, editable business/contact details, status filters, pagination, CSV export, and demo workspace switching
 - Workspace preferences and illustrative subscription screen
 - Responsive navigation and mobile layouts
 
-Bookings persist in localStorage under `limo-bookings`. Customers persist under `limo-customers` and are grouped by stable company IDs. Existing unscoped demo customers are migrated to the original company (`CO-1001`, or the first company if that record is absent). Company records persist under `limo-companies`. Clear that key to reset the sample companies. New directory records persist under `limo-records`; vehicle/driver profile edits use `limo-directory-edits`. Clear these booking and directory keys to reset sample data. Workspace switching filters customers by company; bookings, fleet, and driver data remain shared demo data. Browser filtering is not a security boundary. Dashboard totals, fleet inventory, phone contacts, billing, and invoice payment statuses are sample data. Dates default to 21 October 2026 for a consistent demo. Fonts use Google Fonts with system fallbacks.
+Bookings persist in localStorage under `limo-bookings`. Customers persist under `limo-customers` and are grouped by stable company IDs. Existing unscoped demo customers are migrated to the original company (`CO-1001`, or the first company if that record is absent). The single demo workspace is saved under `limo-workspace`. Company onboarding and switching have been removed; company-specific Supabase logins will be added later. Previous `limo-companies` data is retained locally only to preserve the original workspace ID and existing customer records. New directory records persist under `limo-records`; vehicle/driver profile edits use `limo-directory-edits`. Clear these booking and directory keys to reset sample data. Customers remain linked to the current company ID; bookings, fleet, and driver data remain demo data. Browser filtering is not a security boundary. Dashboard totals, fleet inventory, phone contacts, billing, and invoice payment statuses are sample data. Dates default to 21 October 2026 for a consistent demo. Fonts use Google Fonts with system fallbacks.
 
 ## Future backend
 
