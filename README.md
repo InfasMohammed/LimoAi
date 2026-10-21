@@ -1,0 +1,33 @@
+# Limo — Operations, elevated
+
+A responsive TypeScript and React frontend for a limousine operations SaaS. Built with Vite and Lucide icons. No database, authentication, payment processing, live maps, or AI integration is connected.
+
+## Development
+
+Requires Node.js 22.12+ (validated with Node 24).
+
+```sh
+npm ci
+npm run dev -- --port 5173
+```
+
+```sh
+npm run build
+npm run preview -- --port 4173
+```
+
+## Included
+
+- Operations dashboard with illustrative revenue and fleet metrics
+- Searchable bookings, status and vehicle filters, CSV export
+- Booking creation with passenger, journey, date/time, fare, and notes
+- Booking details, driver assignment, and trip status changes
+- Fleet, drivers, corporate customers, invoices, and booking reports
+- Workspace preferences and illustrative subscription screen
+- Responsive navigation and mobile layouts
+
+Bookings persist in localStorage under `limo-bookings`. Clear that key to reset sample data. Workspace switching is illustrative and does not isolate bookings. Dashboard totals, fleet inventory, phone contacts, billing, and invoice payment statuses are sample data. Dates default to 21 October 2026 for a consistent demo. Fonts use Google Fonts with system fallbacks.
+
+## Future backend
+
+Connect Supabase only after designing company membership, roles, tenant-scoped records, and Row Level Security. Replace browser storage through a typed repository/service layer. Pricing, availability, payments, and access decisions must be enforced server-side. This frontend does not provide production tenant isolation or security.
