@@ -22,6 +22,7 @@ npm run preview -- --port 4173
 - Searchable bookings, status and vehicle filters, CSV export
 - Booking creation with passenger, journey, date/time, fare, and notes
 - Booking details, driver assignment, and trip status changes
+- Completed bookings record actual drop-off date/time in GST; cancellation requires a reason and keeps a Cancelled record
 - Searchable, sortable fleet and driver tables with status filters, pagination, and CSV export
 - Fleet sections for Vehicles, Mileage & shifts, and Maintenance
 - Start/end odometer readings with driver, QC/driver entry source, submitter, distance and notes
@@ -48,8 +49,14 @@ Open **Fleet → Maintenance** to see services due by mileage or date (whichever
 
 Logs persist under `limo-shifts` and `limo-services`; accepted mileage and service schedules persist with vehicle overrides under `limo-directory-edits`. No backend, automatic notifications, document uploads, PWA, or mobile app is connected. Driver/submitter/reviewer names and the QC/Driver source are demo inputs, not authenticated identities. Existing vehicles without a next-service date remain driven by their mileage threshold until a date is entered.
 
-Run mileage validation tests with Node 24:
+Run validation tests with Node 24:
 
 ```sh
 npm test
 ```
+
+## Booking completion and cancellation
+
+Open a booking and choose **Complete booking** to enter its actual drop-off date/time in GST. It must be after pickup (or at the same minute) and cannot be in the future. The timestamp appears in the booking list, details, and CSV export. Existing completed bookings without a recorded timestamp show `Not recorded`; use **Add drop-off time** to fill it accurately.
+
+Use **Cancel booking**, enter a reason, and confirm to retain the booking with a cancellation timestamp and reason. The Cancelled filter shows these records. Driver assignment is locked for completed/cancelled bookings so it cannot accidentally reset their status. The status selector uses these same completion/cancellation forms. There is no payment-provider or refund action in this frontend demo.
