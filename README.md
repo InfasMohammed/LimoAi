@@ -23,7 +23,11 @@ npm run preview -- --port 4173
 - Booking creation with passenger, journey, date/time, fare, and notes
 - Booking details, driver assignment, and trip status changes
 - Searchable, sortable fleet and driver tables with status filters, pagination, and CSV export
-- Click-through vehicle profiles with mileage, service thresholds, registration, insurance, and editable details
+- Fleet sections for Vehicles, Mileage & shifts, and Maintenance
+- Start/end odometer readings with driver, QC/driver entry source, submitter, distance and notes
+- Lower-reading and overlapping-shift checks; unusual distances and mileage gaps require review
+- Accepted shift readings update mileage and maintenance reminders; record service by KM or date
+- Click-through vehicle profiles with mileage/service history, registration, insurance, and editable details
 - Driver profiles with contacts, licences, permits, emergency details, and editable information
 - Customer tables with per-company creation, editable profiles, search, filters, pagination, and scoped CSV export
 - Invoices and booking reports
@@ -35,3 +39,17 @@ Bookings persist in localStorage under `limo-bookings`. Customers persist under 
 ## Future backend
 
 Connect Supabase only after designing company membership, roles, tenant-scoped records, and Row Level Security. Replace browser storage through a typed repository/service layer. Pricing, availability, payments, and access decisions must be enforced server-side. This frontend does not provide production tenant isolation or security.
+
+## Fleet workflow
+
+Open **Fleet → Mileage & shifts** to start a vehicle shift. When it ends, enter the closing odometer and time. Distances above 1,000 km per shift, or gaps between current mileage and the starting reading, require review before updating the vehicle. Reviewers can correct the closing reading and leave a note. A vehicle cannot start another shift until its previous shift is closed and reviewed. Multiple non-overlapping shifts per day are supported; all shift times use GST (UTC+04:00).
+
+Open **Fleet → Maintenance** to see services due by mileage or date (whichever comes first), mark a vehicle under maintenance, and record completed work, workshop, cost, service mileage and next KM/date thresholds. Vehicle profiles show full mileage and service history.
+
+Logs persist under `limo-shifts` and `limo-services`; accepted mileage and service schedules persist with vehicle overrides under `limo-directory-edits`. No backend, automatic notifications, document uploads, PWA, or mobile app is connected. Driver/submitter/reviewer names and the QC/Driver source are demo inputs, not authenticated identities. Existing vehicles without a next-service date remain driven by their mileage threshold until a date is entered.
+
+Run mileage validation tests with Node 24:
+
+```sh
+npm test
+```
