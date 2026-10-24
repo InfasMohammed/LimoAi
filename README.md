@@ -1,6 +1,6 @@
 # Limo — Operations, elevated
 
-A responsive TypeScript and React frontend for a limousine operations SaaS. Built with Vite and Lucide icons. No database, authentication, payment processing, live maps, or AI integration is connected.
+A responsive TypeScript and React frontend for a limousine operations SaaS. Built with Vite and Lucide icons. No database, authentication, payment processing, or AI integration is connected. Google Places autocomplete is implemented and requires a configured browser API key; no embedded map is used.
 
 ## Development
 
@@ -21,6 +21,7 @@ npm run preview -- --port 4173
 - Operations dashboard with illustrative revenue and fleet metrics
 - Searchable bookings, status and vehicle filters, CSV export
 - Booking creation with passenger, journey, date/time, fare, and notes
+- Google Places pickup/drop-off suggestions with structured addresses, Place IDs, coordinates, and separate meeting instructions
 - Booking details, driver assignment, and trip status changes
 - Completed bookings record actual drop-off date/time in GST; cancellation requires a reason and keeps a Cancelled record
 - Searchable, sortable fleet and driver tables with status filters, pagination, and CSV export
@@ -74,3 +75,35 @@ Supplier records are grouped by company ID under localStorage key `limo-supplier
 ## Booking and dispatch responsibilities
 
 **Bookings** captures passenger, journey, requested vehicle, fare and booking status. Driver names, assignment controls, outsourced driver details and assignment history are shown only in **Dispatch**. Bookings/Overview display the requested vehicle; Dispatch displays the operational vehicle and driver. Open a booking from Dispatch to select an own-fleet driver or **Outsource…**. Existing assignments are retained. Booking exports omit driver/supplier assignment fields; Dispatch and Reports exports retain them. This separates frontend workflows and does not implement role-based security.
+
+## Google Places setup
+
+The pickup and drop-off fields use **Places API (New)** through the official Google Maps JavaScript loader. They show UAE suggestions with a Dubai location bias, debounce requests, and use a separate autocomplete session token per location-selection session. Selecting a result fetches only the Place ID, display name, formatted address and location. The loader is shared across both fields.
+
+1. Open [Google Cloud Console](https://console.cloud.google.com/), create/select a project and link billing.
+2. Enable **Maps JavaScript API** and **Places API (New)** under APIs & Services → Library.
+3. Create an API key under APIs & Services → Credentials. Use a browser key with **Websites** application restrictions. For local testing, allow `http://localhost:5173/*` and `http://127.0.0.1:5173/*`; add your actual HTTPS production website before deployment.
+4. Apply API restrictions allowing only Maps JavaScript API and Places API (New).
+5. Create or edit an untracked `.env.local` in the project root (see `.env.example`):
+
+```dotenv
+VITE_GOOGLE_MAPS_API_KEY=your_restricted_browser_key
+```
+
+6. Run `npm ci`, then restart `npm run dev`. Production deployments need the variable present during `npm run build`; rebuild after changing it.
+
+`VITE_` variables are compiled into the browser bundle. This key is intentionally browser-visible and must be protected by website/API restrictions; never use an unrestricted server credential here. Do not commit `.env.local` or paste keys into chat. Google billing/quota/key restrictions are configured in your Google Cloud project, not by this app.
+
+For cloud development, the saved environment draft declares `VITE_GOOGLE_MAPS_API_KEY` and allows `maps.googleapis.com`, `maps.gstatic.com`, and `places.googleapis.com`. Review/save the environment settings and publish to activate that configuration; a draft save alone does not apply it.
+
+### Location records
+
+Each new booking stores `pickupLocation` and `dropoffLocation` with `name`, `formattedAddress`, `placeId`, `latitude`, `longitude`, `provider`, `resolvedAt`, and `instructions`, alongside the existing pickup/drop-off text. Meeting instructions are independent of the address. Details are visible in the booking drawer. Selecting a place and then editing its text immediately clears the previous Place ID and coordinates. Future location-sharing/navigation can use this structured record; sending links and map-pin adjustment are not implemented yet.
+
+Without a key, or if Google fails, typed locations can still be saved but are clearly marked unverified, with no Place ID or fabricated coordinates. Existing bookings remain text-only until re-entered through a connected Places workflow. The app does not invent Google Place IDs or use fake production suggestions.
+
+This phase stores demo booking data in localStorage, not Supabase. Before production persistence, review Google's current Places content storage/refresh terms: Place IDs and other Places content have different storage rules. `resolvedAt` records when a lookup occurred for that future refresh design.
+
+### Validation
+
+`npm test` covers structured location persistence, invalid coordinates, and stale-data clearing. Browser validation exercised SDK loading, autocomplete, keyboard/mouse selection, per-field session tokens, detail fetching, persistence, manual fallback, error handling and mobile layout with mocked Google responses. Live Google requests have **not** been verified because no real API key has been configured.

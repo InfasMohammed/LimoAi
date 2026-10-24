@@ -1,7 +1,8 @@
+import type {BookingLocation} from './locationData';
 import type {Supplier} from './supplierData';
 export type OutsourceAssignment={supplierId:string;supplierName:string;driverName:string;driverPhone:string;vehicleModel:string;vehiclePlate:string;reference:string};
 export type AssignmentHistory={at:string;kind:'own'|'outsource';driver:string;vehicle:string;outsource?:OutsourceAssignment};
-export type Booking={fulfilment?:'own'|'outsource';outsource?:OutsourceAssignment;assignmentHistory?:AssignmentHistory[];date?:string;phone?:string;notes?:string;dropoffAt?:string;cancelledAt?:string;cancellationReason?:string;id:string;name:string;initials:string;company:string;time:string;pickup:string;dropoff:string;type:string;vehicle:string;driver:string;status:string;price:number};
+export type Booking={pickupLocation?:BookingLocation;dropoffLocation?:BookingLocation;fulfilment?:'own'|'outsource';outsource?:OutsourceAssignment;assignmentHistory?:AssignmentHistory[];date?:string;phone?:string;notes?:string;dropoffAt?:string;cancelledAt?:string;cancellationReason?:string;id:string;name:string;initials:string;company:string;time:string;pickup:string;dropoff:string;type:string;vehicle:string;driver:string;status:string;price:number};
 export function validateDropoff(booking:Booking,dropoffAt:string,now:string){
  if(!dropoffAt)return 'Enter the actual drop-off date and time.';
  if(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(dropoffAt)||Number.isNaN(Date.parse(dropoffAt+'+04:00')))return 'Enter a valid drop-off date and time.';
