@@ -31,6 +31,8 @@ npm run preview -- --port 4173
 - Click-through vehicle profiles with mileage/service history, registration, insurance, and editable details
 - Driver profiles with contacts, licences, permits, emergency details, and editable information
 - Customer tables with per-company creation, editable profiles, search, filters, pagination, and scoped CSV export
+- Registered Suppliers with contact details, search, status filters, pagination and CSV export
+- Outsource assignments inside booking details with optional driver/vehicle information and assignment history
 - Invoices and booking reports
 - Workspace preferences and illustrative subscription screen
 - Responsive navigation and mobile layouts
@@ -60,3 +62,11 @@ npm test
 Open a booking and choose **Complete booking** to enter its actual drop-off date/time in GST. It must be after pickup (or at the same minute) and cannot be in the future. The timestamp appears in the booking list, details, and CSV export. Existing completed bookings without a recorded timestamp show `Not recorded`; use **Add drop-off time** to fill it accurately.
 
 Use **Cancel booking**, enter a reason, and confirm to retain the booking with a cancellation timestamp and reason. The Cancelled filter shows these records. Driver assignment is locked for completed/cancelled bookings so it cannot accidentally reset their status. The status selector uses these same completion/cancellation forms. There is no payment-provider or refund action in this frontend demo.
+
+## Outsourced bookings
+
+Register partner companies under **Suppliers → New supplier**. In a non-final booking, choose **Assign driver → Outsource…**, select a supplier, and save. Driver name, driver mobile, vehicle model, plate number, and supplier reference are optional initially. Missing driver/vehicle information displays **Outsourced · Awaiting details**; use **Edit outsource details** when the supplier provides it. There are no colour or supplier-cost fields.
+
+Supplier driver and vehicle details remain snapshots on that booking, outside your own Drivers and Fleet registers. Later changes preserve the preceding assignment and change time in **Assignment history**. Selecting your own driver again removes the current outsource assignment but retains that history. Completed and cancelled bookings remain locked against reassignment. Inactive suppliers cannot receive new assignments, but existing assignments can be updated. Supplier record edits do not silently rewrite booking snapshots.
+
+Supplier records are grouped by company ID under localStorage key `limo-suppliers`; assignments and history persist with `limo-bookings`. Bookings can be searched by supplier/model/plate and CSV exports include supplier assignment details. Your team sends confirmation messages manually: no portal, supplier links, invitations, messaging, or supplier billing integration has been added.
